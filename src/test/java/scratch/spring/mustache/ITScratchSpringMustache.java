@@ -1,8 +1,5 @@
 package scratch.spring.mustache;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +15,13 @@ import scratch.user.Users;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static scratch.spring.mustache.UserConstants.users;
+import static scratch.spring.mustache.UserConstants.containsAll;
+import static scratch.spring.mustache.UserConstants.userOne;
+import static scratch.spring.mustache.UserConstants.userThree;
+import static scratch.spring.mustache.UserConstants.userTwo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ScratchSpringMustacheServlet.class)
@@ -48,53 +49,22 @@ public class ITScratchSpringMustache {
     @Test
     public void I_can_view_the_home_page() {
 
-        when(users.retrieve()).thenReturn(users());
+        final List<User> users = asList(partialUser(userOne()), partialUser(userTwo()), partialUser(userThree()));
+
+        when(this.users.retrieve()).thenReturn(users);
 
         homePage.visit(baseUrl);
 
-        assertThat("the correct users should be displayed.", homePage.users(), hasAllPartialUsers(users()));
+        assertThat("the correct users should be displayed.", homePage.users(), containsAll(users));
     }
 
-    private Matcher<? super List<User>> hasAllPartialUsers(final Iterable<User> expected) {
+    private static User partialUser(User user) {
 
-        return new TypeSafeMatcher<List<User>>() {
+        final User partialUser = new User(user);
+        partialUser.setId(null);
+        partialUser.setPhoneNumber(null);
+        partialUser.setAddress(null);
 
-            @Override
-            protected boolean matchesSafely(List<User> actual) {
-
-                int count = 0;
-
-                for (User user : expected) {
-
-                    if (!contains(actual, user)) {
-                        return false;
-                    }
-
-                    count++;
-                }
-
-                return actual.size() == count;
-            }
-
-            private boolean contains(Iterable<User> actual, User user) {
-
-                for (User partialUser : actual) {
-
-                    if (partialUser.getEmail().equals(user.getEmail()) &&
-                            partialUser.getFirstName().equals(user.getFirstName()) &&
-                            partialUser.getLastName().equals(user.getLastName())
-                            ) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendValue(expected);
-            }
-        };
+        return partialUser;
     }
 }

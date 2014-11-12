@@ -1,7 +1,12 @@
 package scratch.spring.mustache;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import scratch.user.Address;
 import scratch.user.User;
+
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -40,5 +45,33 @@ public class UserConstants {
     public static Iterable<User> users() {
 
         return asList(userOne(), userTwo(), userThree());
+    }
+
+    public static <T> Matcher<? super List<T>> containsAll(final Iterable<T> expected) {
+
+        return new TypeSafeMatcher<List<T>>() {
+
+            @Override
+            protected boolean matchesSafely(List<T> actual) {
+
+                int count = 0;
+
+                for (T element : expected) {
+
+                    if (!actual.contains(element)) {
+                        return false;
+                    }
+
+                    count++;
+                }
+
+                return actual.size() == count;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendValue(expected);
+            }
+        };
     }
 }
