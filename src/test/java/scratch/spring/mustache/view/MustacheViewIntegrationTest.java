@@ -4,8 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -13,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
-import scratch.spring.mustache.ScratchSpringMustacheServlet;
+import scratch.spring.mustache.config.ScratchMustacheConfiguration;
 
 import java.util.HashMap;
 
@@ -21,9 +23,12 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonMap;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ScratchSpringMustacheServlet.class)
+@ContextConfiguration(classes = {MustacheViewIntegrationTest.class, ScratchMustacheConfiguration.class})
+@Configuration
+@ComponentScan
 @WebAppConfiguration("classpath:")
 public class MustacheViewIntegrationTest {
 
@@ -69,6 +74,7 @@ public class MustacheViewIntegrationTest {
     public void I_can_render_a_view() throws Exception {
 
         mockMvc.perform(get(TEST_PATH))
+                .andExpect(status().isOk())
                 .andExpect(content().string(RENDERED_TEMPLATE));
     }
 
@@ -76,6 +82,7 @@ public class MustacheViewIntegrationTest {
     public void I_can_render_a_view_with_a_partial() throws Exception {
 
         mockMvc.perform(get(TEST_WITH_PARTIAL_PATH))
+                .andExpect(status().isOk())
                 .andExpect(content().string(RENDERED_TEMPLATE_WITH_PARTIAL));
     }
 
@@ -83,6 +90,7 @@ public class MustacheViewIntegrationTest {
     public void I_can_render_a_view_with_a_super_template() throws Exception {
 
         mockMvc.perform(get(TEST_WITH_SUPER_PATH))
+                .andExpect(status().isOk())
                 .andExpect(content().string(RENDERED_TEMPLATE_WITH_SUPER));
     }
 
