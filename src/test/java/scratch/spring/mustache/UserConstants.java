@@ -6,7 +6,7 @@ import org.hamcrest.TypeSafeMatcher;
 import scratch.user.Address;
 import scratch.user.User;
 
-import java.util.List;
+import java.util.Collection;
 
 import static java.util.Arrays.asList;
 
@@ -47,12 +47,12 @@ public class UserConstants {
         return asList(userOne(), userTwo(), userThree());
     }
 
-    public static <T> Matcher<? super List<T>> containsAll(final Iterable<T> expected) {
+    public static <T> Matcher<? super Collection<T>> containsAll(final Iterable<T> expected) {
 
-        return new TypeSafeMatcher<List<T>>() {
+        return new TypeSafeMatcher<Collection<T>>() {
 
             @Override
-            protected boolean matchesSafely(List<T> actual) {
+            protected boolean matchesSafely(Collection<T> actual) {
 
                 int count = 0;
 
