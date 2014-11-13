@@ -1,4 +1,4 @@
-package scratch.spring.mustache;
+package scratch.spring.mustache.test;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

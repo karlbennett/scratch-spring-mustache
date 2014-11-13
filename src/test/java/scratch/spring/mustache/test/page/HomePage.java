@@ -1,4 +1,4 @@
-package scratch.spring.mustache;
+package scratch.spring.mustache.test.page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +18,10 @@ public class HomePage {
     @Autowired
     private WebDriver driver;
 
-    public void visit(String baseUrl) {
+    @Autowired
+    private BaseUrl baseUrl;
+
+    public void visit() {
 
         driver.get(baseUrl + "/view/users");
 

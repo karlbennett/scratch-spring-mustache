@@ -1,4 +1,4 @@
-package scratch.spring.mustache;
+package scratch.spring.mustache.test;
 
 import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
