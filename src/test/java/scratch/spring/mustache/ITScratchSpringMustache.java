@@ -11,10 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import scratch.spring.mustache.test.page.BaseUrl;
 import scratch.spring.mustache.test.page.HomePage;
-import scratch.user.User;
+import scratch.spring.mustache.test.page.UserPage;
+import scratch.spring.mustache.test.page.UserRow;
 import scratch.user.Users;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertThat;
@@ -40,6 +39,9 @@ public class ITScratchSpringMustache {
     private HomePage homePage;
 
     @Autowired
+    private UserPage userPage;
+
+    @Autowired
     private BaseUrl baseUrl;
 
     @Before
@@ -51,22 +53,21 @@ public class ITScratchSpringMustache {
     @Test
     public void I_can_view_the_home_page() {
 
-        final List<User> users = asList(partialUser(userOne()), partialUser(userTwo()), partialUser(userThree()));
-
-        when(this.users.retrieve()).thenReturn(users);
+        when(this.users.retrieve()).thenReturn(asList(userOne(), userTwo(), userThree()));
 
         homePage.visit();
 
-        assertThat("the correct users should be displayed.", homePage.users(), containsAll(users));
+        assertThat("the correct users should be displayed.", homePage.users(),
+                containsAll(asList(new UserRow(userOne()), new UserRow(userTwo()), new UserRow(userThree()))));
     }
 
-    private static User partialUser(User user) {
+    @Test
+    public void I_can_view_a_user() {
 
-        final User partialUser = new User(user);
-        partialUser.setId(null);
-        partialUser.setPhoneNumber(null);
-        partialUser.setAddress(null);
+        when(this.users.retrieve()).thenReturn(asList(userOne(), userTwo(), userThree()));
 
-        return partialUser;
+        homePage.visit();
+
+        homePage.users().get(0).clickEmail();
     }
 }

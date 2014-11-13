@@ -47,16 +47,16 @@ public class UserConstants {
         return asList(userOne(), userTwo(), userThree());
     }
 
-    public static <T> Matcher<? super Collection<T>> containsAll(final Iterable<T> expected) {
+    public static Matcher<? super Collection> containsAll(final Iterable expected) {
 
-        return new TypeSafeMatcher<Collection<T>>() {
+        return new TypeSafeMatcher<Collection>() {
 
             @Override
-            protected boolean matchesSafely(Collection<T> actual) {
+            protected boolean matchesSafely(Collection actual) {
 
                 int count = 0;
 
-                for (T element : expected) {
+                for (Object element : expected) {
 
                     if (!actual.contains(element)) {
                         return false;
